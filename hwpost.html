@@ -8,16 +8,24 @@
 </head>
 
 <body>
+  <div id="input-container">
+    <input type="text" id="post-title" placeholder="Заголовок поста">
+    <input type="text" id="post-body" placeholder="Содержание поста">
+    <button id="post-button">Добавить пост</button>
+  </div>
+
   <div id="posts-container"></div>
   <script>
-    const postsContainer = document.getElementById('posts-container');
-
     function makePosts() {
+
+      const title = document.getElementById('post-title').value;
+      const body = document.getElementById('post-body').value;
+
       fetch('https://jsonplaceholder.typicode.com/posts', {
         method: 'POST',
         body: JSON.stringify({
-          title: 'foo',
-          body: 'bar',
+          title: title,
+          body: body,
           userId: 1
         }),
         headers: {
@@ -26,21 +34,31 @@
       })
         .then(response => response.json())
 
-        .then(posts => {
-          posts.forEach(post => {
-            const postElement = document.createElement('div');
-            postElement.classList.add('post');
-            postElement.innerHTML = `
-                            <h2>${post.title}</h2>
-                            <p>${post.body}</p>
-                        `;
-            postsContainer.appendChild(postElement);
-          });
-          .catch ((err) => {
-            titlePost.textContent = 'Произошла ошибка'
-          })
+        .then(post => {
+          // Добавление элемента на страницу для поста
+          const postElement = document.createElement('div');
+          postElement.classList.add('post');
+          // Заголовок поста
+          const titleElement = document.createElement('h2');
+          titleElement.textContent = post.title;
+          postElement.appendChild(titleElement);
+          // Содержание поста
+          const bodyElement = document.createElement('p');
+          bodyElement.textContent = post.body;
+          postElement.appendChild(bodyElement);
+          // Вставка div поста на страницу
+          document.getElementById('posts-container').prepend(postElement);
+          // Очистка полей ввода после добавления поста
+          document.getElementById('post-title').value = '';
+          document.getElementById('post-body').value = '';
+        })
+
+        .catch((err) => {
+          postElement.textContent = 'Произошла ошибка'
+        });
     }
-    makePosts()
+
+    document.getElementById('post-button').addEventListener('click', makePosts);
   </script>
 </body>
 
