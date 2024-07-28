@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Метод POST</title>
+</head>
+
+<body>
+  <div id="posts-container"></div>
+  <script>
+    const postsContainer = document.getElementById('posts-container');
+
+    function makePosts() {
+      fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: 'foo',
+          body: 'bar',
+          userId: 1
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      })
+        .then(response => response.json())
+
+        .then(posts => {
+          posts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+            postElement.innerHTML = `
+                            <h2>${post.title}</h2>
+                            <p>${post.body}</p>
+                        `;
+            postsContainer.appendChild(postElement);
+          });
+          .catch ((err) => {
+            titlePost.textContent = 'Произошла ошибка'
+          })
+    }
+    makePosts()
+  </script>
+</body>
+
+</html>
